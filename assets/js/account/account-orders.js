@@ -48,7 +48,7 @@ angular.module('storefront.account')
         $ctrl.hasPhysicalProducts = true;
 
         function refresh() {
-            loader.wrapLoading(function () {
+            /*loader.wrapLoading(function () {
                 $ctrl.order = orderApi.get({ number: $ctrl.orderNumber }, function (result) {
                     $ctrl.isShowPayment = false;
                     var lastPayment = _.last(_.sortBy($ctrl.order.inPayments, 'createdDate'));
@@ -66,6 +66,31 @@ angular.module('storefront.account')
                     }
                 });
                 return $ctrl.order.$promise;
+            });*/
+
+            loader.wrapLoading(function () {
+                $ctrl.orderGroup = orderApi.getOrderGroup({ number: $ctrl.orderNumber }, function (result) {
+                    $ctrl.isShowPayment = false;
+
+                    for (var i = 0; i < $ctrl.orderGroup.results.length; i++) {
+                        $ctrl.order = $ctrl.orderGroup.results[i];
+
+                        var lastPayment = _.last(_.sortBy($ctrl.orderGroup.results[i].inPayments, 'createdDate'));
+                        $ctrl.orderGroup.results[i].billingAddress = (lastPayment && lastPayment.billingAddress) ||
+                            _.findWhere($ctrl.orderGroup.results[i].addresses, { type: 'billing' }) ||
+                            _.first($ctrl.orderGroup.results[i].addresses);
+                        $ctrl.amountToPay = orderHelper.getNewPayment($ctrl.orderGroup.results[i]).sum.amount;
+
+                         if ($ctrl.amountToPay > 0) {
+                            $ctrl.billingAddressEqualsShipping = true;
+                            loadPromise = orderApi.getNewPaymentData({ number: $ctrl.orderGroup.results[i].number }, function (result) {
+                                //$ctrl.order = result.order;
+                                configurePayment(result.paymentMethods, result.payment);
+                            }).$promise;
+                        }
+                    }
+                });
+                return $ctrl.orderGroup.$promise;
             });
         }
 
@@ -76,8 +101,8 @@ angular.module('storefront.account')
             refresh();
         };
 
-        $ctrl.getInvoicePdf = function () {
-            var url = $window.BASE_URL + 'storefrontapi/orders/' + $ctrl.orderNumber + '/invoice';
+        $ctrl.getInvoicePdf = function (orderNumber) {
+            var url = $window.BASE_URL + 'storefrontapi/orders/' + orderNumber + '/invoice';
             $window.open(url, '_blank');
         }
 

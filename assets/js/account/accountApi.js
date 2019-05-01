@@ -11,6 +11,7 @@ angular.module('storefront.account')
     }])
     .factory('storefront.orderApi', ['$resource', function ($resource) {
         return $resource('storefrontapi/orders/:number', null, {
+            getOrderGroup: { url: 'storefrontapi/orders/:number/group' },
             search: { url: 'storefrontapi/orders/search', method: 'POST' },
             getNewPaymentData: { url: 'storefrontapi/orders/:number/newpaymentdata' },
             addOrUpdatePayment: { url: 'storefrontapi/orders/:number/payments', method: 'POST' },
