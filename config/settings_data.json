@@ -3,7 +3,7 @@
     "presets": {
         "Blue": {
             "suggestions_limit": 10,
-            "bulk_order_enabled": true,
+            "bulk_order_enabled": false,
             "product_compare_enabled": false,
             "product_compare_list_capacity": 4,
             "ajax_cart_enable": true,
