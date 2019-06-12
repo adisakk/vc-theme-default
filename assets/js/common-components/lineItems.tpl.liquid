@@ -18,7 +18,7 @@
             {% endif %}
            
             <div ng-if="lineItem.productType == 'Digital'">
-                <button id="openDigitalContentButton" class="btn btn-sm btn-info" type="button" ng-click="$ctrl.openDigitalContent()">
+                <button id="openDigitalContentButton" class="btn btn-sm btn-info" type="button" ng-click="$ctrl.openDigitalContent(lineItem.productId)">
                     <span class="fa fa-file-text"></span>
                     <span> open </span>
                 </button>

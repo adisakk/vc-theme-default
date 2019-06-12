@@ -67,6 +67,12 @@ angular.module(moduleName, ['ngResource', 'ngComponentRouter', 'credit-cards', '
                 return accountApi.changePassword(changePasswordData).$promise;
             });
         };
+
+        $ctrl.checkPassword = function (checkPasswordData) {
+            return loader.wrapLoading(function () {
+                return accountApi.checkPassword(checkPasswordData).$promise;
+            });
+        };
     }]
 })
 

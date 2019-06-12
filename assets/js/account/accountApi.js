@@ -3,6 +3,7 @@ angular.module('storefront.account')
         return $resource('storefrontapi/account', null, {
             updateAccount: { url: 'storefrontapi/account', method: 'POST' },
             changePassword: { url: 'storefrontapi/account/password', method: 'POST' },
+            checkPassword: { url: 'storefrontapi/account/checkpassword', method: 'POST' },
             searchQuotes: { url: 'storefrontapi/quoterequests/search', method: 'POST' },
             updateAddresses: { url: 'storefrontapi/account/addresses', method: 'POST' },
             getCountries: { url: 'storefrontapi/countries', isArray: true },

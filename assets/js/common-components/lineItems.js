@@ -1,23 +1,33 @@
 var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('digitalContentPasswordCheckDialogController', ['$scope', '$window', '$uibModalInstance', 'dialogData', '$sce', function ($scope, $window, $uibModalInstance, dialogData, $sce) {
+storefrontApp.controller('digitalContentPasswordCheckDialogController', ['$scope', '$window', '$uibModalInstance', 'dialogData', '$sce', 'catalogService' , function ($scope, $window, $uibModalInstance, dialogData, $sce, catalog) {
 
     $scope.dialogData = dialogData;
 
     $scope.close = function () {
-        console.log("close");
         $uibModalInstance.close();
     }
 
     $scope.checkPassword = function () {
-       
-        if ($scope.dialogData.password == 'Test+001') {
-            $scope.dialogData.digitalContent = "http://www.orimi.com/pdf-test.pdf";
+        $scope.dialogData.passwordCheckError = "";
+        $scope.dialogData.digitalContent = "";
 
-        } else {
-            console.log($scope.pdf.src);
-            $scope.dialogData.passwordCheckError = "Password is not match!";
-        }
+        $scope.dialogData.account.checkPassword({ CurrentPassword: $scope.dialogData.password }).then(
+
+            function (result) {
+                if (result.isValid) {
+
+                    catalog.getProduct($scope.dialogData.productId).then(
+                        function (product) {
+                            $scope.dialogData.digitalContent = product.data[0].assets[0];
+                        }
+                    );
+
+                } else {
+                    $scope.dialogData.passwordCheckError = "Password is not match!";
+                }
+            }
+        ); 
     }
 }]);
 
@@ -35,16 +45,15 @@ storefrontApp.component('vcLineItems', {
             var $ctrl = this;
             $ctrl.type = null;
             $ctrl.password = "";
-           
-            $ctrl.openDigitalContent = function () {
-                console.log("openDigitalContent");
-                 var dialogData = {
+
+            $ctrl.openDigitalContent = function (productId) {
+                var dialogData = {
                     lists: $ctrl.password,
-                    type: $ctrl.type
+                    type: $ctrl.type,
+                    account: $ctrl.accountManager,
+                    productId: productId
                  }
-                dialogService.showDialog(dialogData, 'digitalContentPasswordCheckDialogController', 'storefront.digital-content-password-check-dialog.tpl', function (result) {
-                    console.log(result);
-                });
+                dialogService.showDialog(dialogData, 'digitalContentPasswordCheckDialogController', 'storefront.digital-content-password-check-dialog.tpl');
             };
         }
     ]
