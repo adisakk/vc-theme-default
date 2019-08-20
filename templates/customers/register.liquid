@@ -6,33 +6,96 @@
 
         <h1>{{ 'customer.register.title' | t }}</h1>
 
-        <form accept-charset="UTF-8" action="{{ '~/account/register' | absolute_url }}" method="post" id="create_customer" name="create_customer">
+        {% assign action_url = '~/account/register' %}
+
+        {% if form.verification_succeeded == false %}
+            {% if form.verification_code_sent == false %}
+                {% assign action_url = '~/account/register/verify/code' %}
+            {% else %}
+                {% assign action_url = '~/account/register/verify/validate' %}
+            {% endif %}  
+        {% endif %}
+
+        <form accept-charset="UTF-8" action="{{ action_url | absolute_url }}" method="post" id="create_customer" name="create_customer">
 
 
             {% include 'form-errors-custom' %}
 
-            <label for="first_name" class="hidden-label">{{ 'customer.register.first_name' | t }}</label>
-            <input type="text" value="{{form.first_name}}" name="customer[first_name]" id="first_name" placeholder="{{ 'customer.register.first_name' | t }}" {% if form.errors contains "first_name" %} class="error" {% endif %} autocapitalize="words" autofocus>
+            
+            <input type="hidden" value="{{form.verification_type}}" name="customer[verification_type]">
 
-            <label for="last_name" class="hidden-label">{{ 'customer.register.last_name' | t }}</label>
-            <input type="text" value="{{form.last_name}}" name="customer[last_name]" id="last_name" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.errors contains "last_name" %} class="error" {% endif %} autocapitalize="words">
+            {% if form.verification_succeeded == false %}
 
-            <label for="email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
-            <input type="email" value="{{form.email}}" name="customer[email]" id="email" placeholder="{{ 'customer.register.email' | t }}" {% if form.errors contains "email" %} class="error" {% endif %} autocorrect="off" autocapitalize="off">
+                <input type="hidden" value="{{form.verification_code_sent}}" name="customer[verification_code_sent]">
 
-            <label for="user_name" class="hidden-label">{{ 'customer.register.user_name' | t }}</label>
-            <input type="text" value="" name="customer[user_name]" id="user_name" placeholder="{{ 'customer.register.user_name' | t }}" {% if form.errors contains "user_name" %} class="error" {% endif %} autocorrect="off" autocapitalize="off">
+                {% if form.verification_code_sent == false %}
+                    {% if form.verification_type == 'Email' %}
+                        <label for="email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
+                        <input type="email" value="{{form.email}}" name="customer[email]" id="email" required placeholder="{{ 'customer.register.email' | t }}" {% if form.errors contains "email" %} class="error" {% endif %} autocorrect="off" autocapitalize="off" autofocus>
+                    {% else %}
+                        <label for="phone_number" class="hidden-label">{{ 'customer.register.phone_number' | t }}</label>
+                        <input type="tel" value="{{form.phone_number}}" name="customer[phone_number]" id="phone_number" pattern="[0-9]{10}" required placeholder="{{ 'customer.register.phone_number' | t }}" {% if form.errors contains "phone_number" %} class="error" {% endif %} autocorrect="off" autocapitalize="off" autofocus>
+                    {% endif %}
+                {% else %}
+                    <input type="hidden" value="{{form.phone_number}}" name="customer[phone_number]">
+                    <input type="hidden" value="{{form.email}}" name="customer[email]">
+                    <label for="verification_code" class="hidden-label">{{ 'customer.register.verification_code' | t }}</label>
+                    <input type="text" value="{{form.verification_code}}" name="customer[verification_code]" id="verification_code" required placeholder="{{ 'customer.register.verification_code' | t }}" {% if form.errors contains "verification_code" %} class="error" {% endif %} autocorrect="off" autocapitalize="characters" autofocus>
+                {% endif %}
 
-            <label for="password" class="hidden-label">{{ 'customer.register.password' | t }}</label>
-            <input type="password" minlength="5" value="" name="customer[password]" id="create_password" placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} class="error" {% endif %}>
-            <p>
-                <input type="submit" value="{{ 'customer.register.submit' | t }}" class="btn">
-            </p>
+                <p>
+                {% if form.verification_code_sent == false %}
+                    <p>
+                        {% if form.verification_type == 'Email' %}
+                            <a href="{{ 'account/register/verify/phone' | absolute_url }}">{{ 'customer.register.signup_by_phone' | t }}</a> <br/>
+                        {% else %}
+                            <a href="{{ 'account/register/verify/email' | absolute_url }}">{{ 'customer.register.signup_by_email' | t }}</a> <br/>
+                        {% endif %}
+                    </p>
+                    <input type="submit" value="{{ 'customer.register.send_verification_code' | t }}" class="btn">
+                {% else %}
+                    <p>
+                        {% if form.verification_type == 'Email' %}
+                            <a href="{{ 'account/register/verify/email' | absolute_url }}">{{ 'customer.register.resend_verification_code' | t }}</a> <br/>
+                        {% else %}
+                            <a href="{{ 'account/register/verify/phone' | absolute_url }}">{{ 'customer.register.resend_verification_code' | t }}</a> <br/>
+                        {% endif %}
+                    </p>
+                    <input type="submit" value="{{ 'customer.register.validate_code' | t }}" class="btn">
+                {% endif %}
+                </p>
+
+            {% else %}
+                <input type="hidden" value="{{form.verification_succeeded}}" name="customer[verification_succeeded]" id="verification_succeeded">
+                {% if form.verification_type == 'Email' %}
+                    <label for="email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
+                    <input type="email" value="{{form.email}}" name="customer[email]" id="email" required readonly placeholder="{{ 'customer.register.email' | t }}" {% if form.errors contains "email" %} class="error" {% endif %} autocorrect="off" autocapitalize="off">
+                    <input type="hidden" value="{{form.phone_number}}" name="customer[phone_number]" id="phone_number">
+                {% else %}
+                    <label for="phone_number" class="hidden-label">{{ 'customer.register.phone_number' | t }}</label>
+                    <input type="tel" value="{{form.phone_number}}" name="customer[phone_number]" id="phone_number" pattern="[0-9]{10}" required readonly placeholder="{{ 'customer.register.phone_number' | t }}" {% if form.errors contains "phone_number" %} class="error" {% endif %} autocorrect="off" autocapitalize="off">
+                    <input type="hidden" value="{{form.email}}" name="customer[email]" id="email" >
+                {% endif %}
+
+                <input type="hidden" value="{{form.user_name}}" name="customer[user_name]" id="user_name">
+
+                <label for="password" class="hidden-label">{{ 'customer.register.password' | t }}</label>
+                <input type="password" minlength="5" value="" name="customer[password]" id="create_password" required placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} class="error" {% endif %} autofocus>
+            
+                <label for="first_name" class="hidden-label">{{ 'customer.register.first_name' | t }}</label>
+                <input type="text" value="{{form.first_name}}" name="customer[first_name]" id="first_name" required placeholder="{{ 'customer.register.first_name' | t }}" {% if form.errors contains "first_name" %} class="error" {% endif %} autocapitalize="words">
+
+                <label for="last_name" class="hidden-label">{{ 'customer.register.last_name' | t }}</label>
+                <input type="text" value="{{form.last_name}}" name="customer[last_name]" id="last_name" required placeholder="{{ 'customer.register.last_name' | t }}" {% if form.errors contains "last_name" %} class="error" {% endif %} autocapitalize="words">
+
+                <p>
+                    <input type="submit" value="{{ 'customer.register.submit' | t }}" class="btn" {% if form.verification_succeeded == false %} disabled {% endif %}>
+                </p>
+            {% endif %}
+
             {{ 'common.or' | t }} <a href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>
 
             {{ antiforgery }}
         </form>
-
     </div>
-
 </div>

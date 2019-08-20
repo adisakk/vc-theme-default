@@ -608,14 +608,11 @@
             "submit": "Create",
             "signup_by_phone": "Sign up with phone",
             "signup_by_email": "Sign up with email",
-            "phone_already_registered": "Phone number is already registered",
-            "email_already_registered": "Email address is already registered",
             "send_verification_code": "Send verification code",
             "verification_code": "Verification code",
             "validate_code": "Validate code",
             "resend_verification_code": "Resend verification code",
-            "cancel": "Return to Store",
-            "registration_unsuccessful":  "Registration is unsuccessful"
+            "cancel": "Return to Store"
         },
         "phone_number": {
             "manage": "Edit you phone number"
