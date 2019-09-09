@@ -10,7 +10,11 @@ angular.module('storefront.account')
             getCountryRegions: { url: 'storefrontapi/countries/:code3/regions', isArray: true },
             deletePhoneNumber: { url: "storefrontapi/account/phonenumber", method: "DELETE" },
             changeTwoFactorAuth: { url: "storefrontapi/account/twofactorauthentification", method: "POST" },
-            updatePhoneNumber: { url: "storefrontapi/account/phonenumber", method: "POST" }
+            updatePhoneNumber: { url: "storefrontapi/account/phonenumber", method: "POST" },
+            updateEmailAddress: { url: "storefrontapi/account/email", method: "POST" },
+            sendVerificationCode: { url: "storefrontapi/account/verificationcode", method: "POST" },
+            validateVerificationCode: { url: "storefrontapi/account/validatecode", method: "POST" },
+            upload: { url: "storefrontapi/account/upload", method: "POST" }
         });
     }])
     .factory('storefront.orderApi', ['$resource', function ($resource) {

@@ -31,6 +31,46 @@
     padding-right: 4%;
 }
 
+/* Image preview */
+.image-preview {
+    background: #fff;
+    border: 2px solid #a1c0d4;
+    height: 300px;
+    line-height: 298px;
+    overflow: hidden;
+    position: fixed;
+    width: 300px;
+    z-index: 50;
+}
+
+.image-preview * {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.image-preview-small {
+    background: #fff;
+    border: 2px solid #a1c0d4;
+    height: 108px;
+    width: 108px;
+    line-height: 100px;
+    overflow: hidden;
+    z-index: 50;
+}
+
+.image-preview-small * {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.image-preview-no-image {
+    text-align: center;
+    font-size: 48px;
+    color: #dee9f0;
+}
+
 button,
 input,
 select {

@@ -39,8 +39,8 @@
                 {% else %}
                     <input type="hidden" value="{{form.phone_number}}" name="customer[phone_number]">
                     <input type="hidden" value="{{form.email}}" name="customer[email]">
-                    <label for="verification_code" class="hidden-label">{{ 'customer.register.verification_code' | t }}</label>
-                    <input type="text" value="{{form.verification_code}}" name="customer[verification_code]" id="verification_code" required placeholder="{{ 'customer.register.verification_code' | t }}" {% if form.errors contains "verification_code" %} class="error" {% endif %} autocorrect="off" autocapitalize="characters" autofocus>
+                    <label for="verification_code" class="hidden-label">{{ 'customer.verification.verification_code' | t }}</label>
+                    <input type="text" value="{{form.verification_code}}" name="customer[verification_code]" id="verification_code" required placeholder="{{ 'customer.verification.verification_code' | t }}" {% if form.errors contains "verification_code" %} class="error" {% endif %} autocorrect="off" autocapitalize="characters" autofocus>
                 {% endif %}
 
                 <p>
@@ -52,16 +52,16 @@
                             <a href="{{ 'account/register/verify/email' | absolute_url }}">{{ 'customer.register.signup_by_email' | t }}</a> <br/>
                         {% endif %}
                     </p>
-                    <input type="submit" value="{{ 'customer.register.send_verification_code' | t }}" class="btn">
+                    <input type="submit" value="{{ 'customer.verification.send_verification_code' | t }}" class="btn">
                 {% else %}
                     <p>
                         {% if form.verification_type == 'Email' %}
-                            <a href="{{ 'account/register/verify/email' | absolute_url }}">{{ 'customer.register.resend_verification_code' | t }}</a> <br/>
+                            <a href="{{ 'account/register/verify/email' | absolute_url }}">{{ 'customer.verification.resend_verification_code' | t }}</a> <br/>
                         {% else %}
-                            <a href="{{ 'account/register/verify/phone' | absolute_url }}">{{ 'customer.register.resend_verification_code' | t }}</a> <br/>
+                            <a href="{{ 'account/register/verify/phone' | absolute_url }}">{{ 'customer.verification.resend_verification_code' | t }}</a> <br/>
                         {% endif %}
                     </p>
-                    <input type="submit" value="{{ 'customer.register.validate_code' | t }}" class="btn">
+                    <input type="submit" value="{{ 'customer.verification.validate_code' | t }}" class="btn">
                 {% endif %}
                 </p>
 

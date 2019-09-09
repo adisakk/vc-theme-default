@@ -4,7 +4,7 @@ var moduleName = "storefront.account";
 if (storefrontAppDependencies !== undefined) {
     storefrontAppDependencies.push(moduleName);
 }
-angular.module(moduleName, ['ngResource', 'ngComponentRouter', 'credit-cards', 'pascalprecht.translate', 'ngSanitize', 'storefrontApp'])
+angular.module(moduleName, ['ngResource', 'ngComponentRouter', 'credit-cards', 'pascalprecht.translate', 'ngSanitize', 'storefrontApp', 'angularFileUpload'])
 
 .config(['$translateProvider', function ($translateProvider) {
     $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
@@ -78,6 +78,18 @@ angular.module(moduleName, ['ngResource', 'ngComponentRouter', 'credit-cards', '
 
         $ctrl.updatePhoneNumber = function (number) {
             return accountApi.updatePhoneNumber({phoneNumber: number}).$promise;
+        };
+
+        $ctrl.updateEmailAddress = function (email) {
+            return accountApi.updateEmailAddress({ email: email }).$promise;
+        };
+
+        $ctrl.sendVerificationCode = function (phoneNumber, email) {
+            return accountApi.sendVerificationCode({ phoneNumber: phoneNumber , email: email}).$promise;
+        };
+
+        $ctrl.validateVerificationCode = function (recipient, verificationcode) {
+            return accountApi.validateVerificationCode({ recipient: recipient, verificationcode: verificationcode }).$promise;
         };
     }]
 })

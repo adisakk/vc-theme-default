@@ -1,32 +1,175 @@
  <div class="one-half" ng-show="$ctrl.customer.isContact">
     <h4>{{ 'customer.edit_profile.title' | t }}</h4>
+
+    <form name="phoneForm">
+        <div class="form-group" ng-class="{'keyuped': $ctrl.newPhoneNumber.length, 'error': false || $ctrl.isPhoneUpdateFailed}">
+            <label for="newPhoneNumber" class="form-label">{{ 'customer.edit_profile.phone' | t }}</label>
+            <input ng-model="$ctrl.newPhoneNumber" ng-change="$ctrl.changePhoneNumber()" name="newPhoneNumber" id="newPhoneNumber" placeholder="{{ 'customer.edit_profile.phone' | t }}" type="tel" ng-required="yes" class="form-input"  ng-readonly="no" />
+            <span class="form-error" ng-if="false">{{ 'common.invalid' | t }}</span>
+            <span class="form-error" ng-if="$ctrl.isPhoneUpdateFailed">{{ 'customer.edit_profile.phone_update_failed' | t }}</span>
+        </div>
+
+        <div ng-if="$ctrl.isPhoneChanged && !$ctrl.isPhoneCodeSent">
+            <button class="vc-btn" ng-click="$ctrl.sendPhoneVerificationCode()" ng-disabled="$ctrl.isPhoneFormLoading" ng-class="{ 'btn--disabled': phoneForm.$pristine, 'loading': $ctrl.isPhoneFormLoading }">
+                <span class="btn-text">{{ 'customer.verification.send_verification_code' | t }}</span>
+                <span class="btn-loading"></span>
+            </button>
+            <button class="vc-btn" ng-click="$ctrl.undoPhoneNumberChange()" ng-disabled="$ctrl.isPhoneFormLoading" ng-class="{ 'btn--disabled': phoneForm.$pristine, 'loading': $ctrl.isPhoneFormLoading }">
+                <span class="btn-text">{{ 'customer.edit_profile.cancel' | t }}</span>
+            </button>
+        </div>
+
+        <div ng-if="$ctrl.isPhoneChanged && $ctrl.isPhoneCodeSent">
+            <div class="form-group" ng-class="{'keyuped': $ctrl.phoneVerificationCode.length, 'error': $ctrl.isPhoneCodeSubmitted && !$ctrl.isPhoneVerified}">
+                <label for="phoneVerificationCode" class="form-label">{{ 'customer.verification.verification_code' | t }}</label>
+                <input ng-model="$ctrl.phoneVerificationCode" name="phoneVerificationCode" id="phoneVerificationCode" placeholder="{{ 'customer.verification.verification_code' | t }}" type="text" ng-required="yes" class="form-input"  ng-readonly="no" />
+                <span class="form-error" ng-if="$ctrl.isPhoneCodeSubmitted && !$ctrl.isPhoneVerified">{{ 'customer.verification.invalid_verification_code' | t }}</span>
+            </div>
+        </div>
+
+        <div ng-if="$ctrl.isPhoneChanged && $ctrl.isPhoneCodeSent">
+            <button class="vc-btn" ng-click="$ctrl.validatePhoneVerificationCode()" ng-disabled="$ctrl.isPhoneFormLoading" ng-class="{ 'btn--disabled': phoneForm.$pristine, 'loading': $ctrl.isPhoneFormLoading }">
+                <span class="btn-text">{{ 'customer.edit_profile.submit' | t }}</span>
+                <span class="btn-loading"></span>
+            </button>
+            <button class="vc-btn" ng-if="$ctrl.isPhoneCodeSubmitted && !$ctrl.isPhoneVerified" ng-click="$ctrl.resendPhoneVerificationCode()" ng-disabled="$ctrl.isPhoneFormLoading" ng-class="{ 'btn--disabled': phoneForm.$pristine, 'loading': $ctrl.isPhoneFormLoading }">
+                <span class="btn-text">{{ 'customer.verification.resend_verification_code' | t }}</span>
+                <span class="btn-loading"></span>
+            </button>
+            <button class="vc-btn" ng-click="$ctrl.undoPhoneNumberChange()" ng-disabled="$ctrl.isPhoneFormLoading" >
+                <span class="btn-text">{{ 'customer.edit_profile.cancel' | t }}</span>
+            </button>
+        </div>
+
+    </form>
+
+    <form name="emailForm">
+        <div class="form-group" ng-class="{'keyuped': $ctrl.newEmail.length, 'error': false || $ctrl.isEmailUpdateFailed}">
+            <label for="newEmail" class="form-label">{{ 'customer.edit_profile.email' | t }}</label>
+            <input ng-model="$ctrl.newEmail" ng-change="$ctrl.changeEmailAddress()" name="newEmail" id="newEmail" placeholder="{{ 'customer.edit_profile.email' | t }}" type="email" ng-required="yes" class="form-input"  ng-readonly="no" />
+            <span class="form-error" ng-if="false">{{ 'common.invalid' | t }}</span>
+            <span class="form-error" ng-if="$ctrl.isEmailUpdateFailed">{{ 'customer.edit_profile.email_update_failed' | t }}</span>
+        </div>
+        <div ng-if="$ctrl.isEmailChanged && !$ctrl.isEmailCodeSent">
+            <button class="vc-btn" ng-click="$ctrl.sendEmailVerificationCode()" ng-disabled="$ctrl.isEmailFormLoading" ng-class="{ 'btn--disabled': emailForm.$pristine, 'loading': $ctrl.isEmailFormLoading }">
+                <span class="btn-text">{{ 'customer.verification.send_verification_code' | t }}</span>
+                <span class="btn-loading"></span>
+            </button>
+            <button class="vc-btn" ng-click="$ctrl.undoEmailAddressChange()" ng-disabled="$ctrl.isEmailFormLoading">
+                <span class="btn-text">{{ 'customer.edit_profile.cancel' | t }}</span>
+            </button>
+        </div>
+        <div ng-if="$ctrl.isEmailChanged && $ctrl.isEmailCodeSent">
+            <div class="form-group" ng-class="{'keyuped': $ctrl.emailVerificationCode.length, 'error': $ctrl.isEmailCodeSubmitted && !$ctrl.isEmailVerified}">
+                <label for="emailVerificationCode" class="form-label">{{ 'customer.verification.verification_code' | t }}</label>
+                <input ng-model="$ctrl.emailVerificationCode" name="emailVerificationCode" id="emailVerificationCode" placeholder="{{ 'customer.verification.verification_code' | t }}" type="text" ng-required="yes" class="form-input"  ng-readonly="no" />
+                <span class="form-error" ng-if="$ctrl.isEmailCodeSubmitted && !$ctrl.isEmailVerified">{{ 'customer.verification.invalid_verification_code' | t }}</span>
+            </div>
+        </div>
+        <div ng-if="$ctrl.isEmailChanged && $ctrl.isEmailCodeSent">
+            <button class="vc-btn" ng-click="$ctrl.validateEmailVerificationCode()" ng-disabled="$ctrl.isEmailFormLoading" ng-class="{ 'btn--disabled': emailForm.$pristine, 'loading': $ctrl.isEmailFormLoading }">
+                <span class="btn-text">{{ 'customer.edit_profile.submit' | t }}</span>
+                <span class="btn-loading"></span>
+            </button>
+            <button class="vc-btn" ng-if="$ctrl.isEmailCodeSubmitted && !$ctrl.isEmailVerified" ng-click="$ctrl.resendEmailVerificationCode()" ng-disabled="$ctrl.isEmailFormLoading" ng-class="{ 'btn--disabled': emailForm.$pristine, 'loading': $ctrl.isEmailFormLoading }">
+                <span class="btn-text">{{ 'customer.verification.resend_verification_code' | t }}</span>
+                <span class="btn-loading"></span>
+            </button>
+            <button class="vc-btn" ng-click="$ctrl.undoEmailAddressChange()" ng-disabled="$ctrl.isEmailFormLoading" >
+                <span class="btn-text">{{ 'customer.edit_profile.cancel' | t }}</span>
+            </button>
+        </div>
+    </form>
+
     <form ng-submit="$ctrl.submit()" name="detailForm">
+        
         <vc-labeled-input value="$ctrl.changeData.firstName" name="first_name" placeholder="{{ 'customer.edit_profile.first_name' | t }}" form="detailForm" required="true" autofocus="true"></vc-labeled-input>
         <vc-labeled-input value="$ctrl.changeData.lastName" name="last_name" placeholder="{{ 'customer.edit_profile.last_name' | t }}" form="detailForm"></vc-labeled-input>
-        <vc-labeled-input value="$ctrl.changeData.email" name="email" placeholder="{{ 'customer.edit_profile.email' | t }}" form="detailForm" required="true" type="email"></vc-labeled-input>
+        
+        <div class="col">
+            <div class="form-group form-select" ng-class="{'keyuped': $ctrl.changeData.gender.length, 'error': (detailForm.gender.$dirty || detailForm.$submitted) && detailForm.gender.$error.required }">
+                <label for="gender" class="form-label">{{ 'customer.edit_profile.gender' | t }}</label>
+                <select ng-model="$ctrl.changeData.gender" ng-options="g for g in $ctrl.genders" name="gender" required="required" class="form-input" size="1">
+                    <option value="">{{ 'customer.edit_profile.gender_select_placeholder' | t }}</option>
+                </select>
+                <span class="form-error" ng-if="(detailForm.gender.$dirty || detailForm.$submitted) && detailForm.gender.$error.required" ng-bind="detailForm.gender.requiredError || '{{ 'common.required' | t }}'"></span>
+            </div>
+         </div>
+
+        <vc-labeled-input value="$ctrl.changeData.idCardNumber" name="idCardNumber" placeholder="{{ 'customer.edit_profile.id_card_number' | t }}" form="detailForm" required="true"></vc-labeled-input>
+        
+        <div class="cols">
+            <div class="col col-33">
+                <div class="form-group form-select" ng-class="{'keyuped': $ctrl.bday.length, 'error': (detailForm.bday.$dirty || detailForm.$submitted) && detailForm.bday.$error.required }">
+                    <label for="bday" class="form-label">{{ 'customer.edit_profile.birth_day' | t }}</label>
+                    <select ng-model="$ctrl.bday" ng-options="d for d in $ctrl.days" name="bday" required="required" class="form-input" size="1">
+                        <option value="">{{ 'customer.edit_profile.birth_day_select_placeholder' | t }}</option>
+                    </select>
+                    <span class="form-error" ng-if="(detailForm.bday.$dirty || detailForm.$submitted) && detailForm.bday.$error.required" ng-bind="detailForm.bday.requiredError || '{{ 'common.required' | t }}'"></span>
+                </div>
+            </div>
+            
+            <div class="col col-33">
+                <div class="form-group form-select" ng-class="{'keyuped': $ctrl.bmonth.length, 'error': (detailForm.bmonth.$dirty || detailForm.$submitted) && detailForm.bmonth.$error.required }">
+                    <label for="bmonth" class="form-label">{{ 'customer.edit_profile.birth_month' | t }}</label>
+                    <select ng-model="$ctrl.bmonth" ng-options="m for m in $ctrl.months" name="bmonth" required="required" class="form-input" size="1">
+                        <option value="">{{ 'customer.edit_profile.birth_month' | t }}</option>
+                    </select>
+                    <span class="form-error" ng-if="(detailForm.bmonth.$dirty || detailForm.$submitted) && detailForm.bmonth.$error.required" ng-bind="detailForm.bmonth.requiredError || '{{ 'common.required' | t }}'"></span>
+                </div>
+            </div>
+            
+            <div class="col col-33">
+                <div class="form-group form-select" ng-class="{'keyuped': !$ctrl.byear == '', 'error': (detailForm.byear.$dirty || detailForm.$submitted) && detailForm.byear.$error.required}">
+                    <label for="byear" class="form-label">{{ 'customer.edit_profile.birth_year' | t }}</label>
+                    <select ng-model="$ctrl.byear" ng-options="y for y in $ctrl.years" name="byear" id="byear" required="required" class="form-input" size="1">
+                        <option value="">{{ 'customer.edit_profile.birth_year' | t }}</option>
+                    </select>
+                    <span class="form-error" ng-if="(detailForm.byear.$dirty || detailForm.$submitted) && detailForm.byear.$error.required" ng-bind="detailForm.byear.requiredError || '{{ 'common.required' | t }}'"></span>
+                </div>
+                <p class="form-error" ng-if="$ctrl.detailForm.$submitted && $ctrl.byear.$error.required" ng-bind="'Please select ' + $ctrl.byear"></p>
+            </div>
+        </div>
+
+        <div class="cols">
+            <div class="col col-50" align="center">
+                <div class="form-input">
+                    <p>{{ 'customer.edit_profile.upload_id_card_photo' | t }}</p>
+                    <div class="image-preview-small" ng-class="{'image-preview-no-image': !$ctrl.changeData.idCardPhoto}" style="cursor:pointer">
+                        <img ng-if="$ctrl.changeData.idCardPhoto" ng-src="$ctrl.changeData.idCardPhoto" ng-click="openUrl($ctrl.changeData.idCardPhoto)" />
+                        <i ng-if="!$ctrl.changeData.idCardPhoto" class="gallery-ico fa fa-image"></i>
+                    </div>
+                    <label ng-if="!$ctrl.changeData.idCardPhoto" style="cursor:pointer" ng-click="$ctrl.isIdCardPhotoUploading=true">
+                        <input style="display: none;" name="idCardUploader" type="file" multiple-attr="false" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1" accept="image/*">
+                        Upload
+                    </label>
+                    <a ng-if="$ctrl.changeData.idCardPhoto" href ng-click="$ctrl.changeData.idCardPhoto=null">Delete</a>
+                </div>
+            </div>
+            
+            <div class="col col-50" align="center">
+                <div class="form-input">
+                    <p>{{ 'customer.edit_profile.upload_bankbook_photo' | t }}</p>
+                    <div class="image-preview-small" ng-class="{'image-preview-no-image': !$ctrl.changeData.bankbookPhoto}" style="cursor:pointer" align="center">
+                        <img ng-if="$ctrl.changeData.bankbookPhoto" ng-src="{% raw %}{{$ctrl.changeData.bankbookPhoto}}{% endraw %}" ng-click="openUrl($ctrl.changeData.bankbookPhoto)" />
+                        <i ng-if="!$ctrl.changeData.bankbookPhoto" class="gallery-ico fa fa-image"></i>
+                    </div>
+                    <div>
+                        <label ng-if="!$ctrl.changeData.bankbookPhoto" style="cursor:pointer" ng-click="$ctrl.isBankbookPhotoUploading=true">
+                            <input style="display: none;" name="bankbookUploader" type="file" multiple-attr="false" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1" accept="image/*">
+                            Upload
+                        </label>
+                        <a ng-if="$ctrl.changeData.bankbookPhoto" href ng-click="$ctrl.changeData.bankbookPhoto=null">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
 
         <button class="vc-btn" ng-disabled="$ctrl.loader.isLoading" ng-class="{ 'btn--disabled': detailForm.$pristine, 'loading': $ctrl.loader.isLoading }">
             <span class="btn-text">{{ 'customer.edit_profile.submit' | t }}</span>
             <span class="btn-loading"></span>
         </button>
-    </form> 
-    <form name="phone">
-    <vc-labeled-input name="PhoneNumber" placeholder="{{ 'contact.form.phone' | t }}" value="$ctrl.phoneNumber" ng-model="$ctrl.phoneNumber" ng-pattern="/^[+]?[0-9]?[(]?[0-9]{0,3}[)]?[0-9]{0,7}$/" ng-class="{'form-group error': phone.$invalid}"></vc-labeled-input>
-    <span ng-if="phone.$invalid"  ng-class="{'form-error': phone.$invalid}">Invalid phone number</span>
-    </form>        
-    <div>
-        <button class="vc-btn" ng-if="$ctrl.phoneNumber" ng-click="$ctrl.updatePhoneNumber()">            
-            <span class="btn-text">{{ 'customer.edit_profile.submit' | t }}</span>
-        </button>        
-        <button class="vc-btn" ng-if="$ctrl.phoneNumber" ng-disabled="$ctrl.twoFactorEnabled" ng-click="$ctrl.deletePhoneNumber()">
-            <span class="btn-text">{{ 'customer.edit_profile.delete' | t }}</span>
-        </button>
-    </div>
-    <br>
-    <label class="switch">
-        {% raw %}{{$ctrl.twoFactorEnabled ? "Two Factor Authentication: Enabled" : "Two Factor Authentication: Disabled" }}{% endraw %}                
-    </label>
-    <button class="vc-btn" name="TwoFactorEnabled" ng-model="$ctrl.twoFactorEnabled" ng-click="$ctrl.toggleTwoFactorAuth()">
-        <span class="btn-text">{% raw %}{{$ctrl.twoFactorEnabled ? "Disable" : "Enable" }}{% endraw %}</span>
-    </button>
+
+    </form>
 </div>
