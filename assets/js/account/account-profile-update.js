@@ -13,6 +13,7 @@ angular.module('storefront.account')
 
         // For detailForm
         $ctrl.genders = ["Male", "Female"];
+        $ctrl.customerTypes = ["Individual", "Corporation", "Foreign National"];
         $ctrl.days = [];
         $ctrl.months = [];
         $ctrl.years = [];
@@ -164,7 +165,7 @@ angular.module('storefront.account')
                 return "";
             }
         };
-        
+
         $scope.$watch(
             function () { return mainContext.customer; },
             function (customer) {
@@ -173,21 +174,24 @@ angular.module('storefront.account')
                     if (customer.isContract) {
                         $ctrl.$router.navigate(['Orders']);
                     }
-
+                    console.log(customer); // Debug
                     var sex = customer.contact.dynamicProperties.find(function (element) {
                         return element.name == 'Sex';
                     });
                     var birthday = customer.contact.dynamicProperties.find(function (element) {
                         return element.name == 'Birthday';
                     });
-                    var idCardNumber = customer.contact.dynamicProperties.find(function (element) {
-                        return element.name == 'IdCardNumber';
+                    var idNumber = customer.contact.dynamicProperties.find(function (element) {
+                        return element.name == 'IdNumber';
                     });
-                    var idCardPhoto = customer.contact.dynamicProperties.find(function (element) {
-                        return element.name == 'IdCardPhoto';
+                    var idPhoto = customer.contact.dynamicProperties.find(function (element) {
+                        return element.name == 'IdPhoto';
                     });
                     var bankbookPhoto = customer.contact.dynamicProperties.find(function (element) {
                         return element.name == 'BankbookPhoto';
+                    });
+                    var customerType = customer.contact.dynamicProperties.find(function (element) {
+                        return element.name == 'CustomerType';
                     });
                     
                     $ctrl.changeData =
@@ -196,12 +200,15 @@ angular.module('storefront.account')
                         lastName: customer.lastName,
                         fullName: customer.fullName,
                         email: customer.email,
-                        gender: sex != undefined && sex.values[0] != null ? sex.values[0].value : '',
-                        idCardNumber: idCardNumber != undefined ? idCardNumber.values[0].value : '',
-                        birthday: birthday != undefined && birthday.values[0] != null ? birthday.values[0].value : '',
-                        idCardPhoto: idCardPhoto != undefined && idCardPhoto.values[0] != null ? idCardPhoto.values[0].value : null,
-                        bankbookPhoto: bankbookPhoto != undefined && bankbookPhoto.values[0] != null ? bankbookPhoto.values[0].value : null
+                        gender: sex != undefined && sex.values[0] != undefined ? sex.values[0].value : '',
+                        idNumber: idNumber != undefined && idNumber.values[0] != undefined ? idNumber.values[0].value : '',
+                        birthday: birthday != undefined && birthday.values[0] != undefined ? birthday.values[0].value : '',
+                        idPhoto: idPhoto != undefined && idPhoto.values[0] != undefined ? idPhoto.values[0].value : null,
+                        bankbookPhoto: bankbookPhoto != undefined && bankbookPhoto.values[0] != undefined ? bankbookPhoto.values[0].value : null,
+                        customerType: customerType != undefined && customerType.values[0] != undefined ? customerType.values[0].value : 'Individual',
+                        corporationName: customer.firstName
                     };
+
                     $ctrl.phoneNumber = customer.phoneNumber;
                     $ctrl.twoFactorEnabled = customer.twoFactorEnabled;
                     $ctrl.newPhoneNumber = $ctrl.phoneNumber;
@@ -209,10 +216,12 @@ angular.module('storefront.account')
  
                     if ($ctrl.changeData.birthday != null && $ctrl.changeData.birthday != '') {
                         var dateSplit = $ctrl.changeData.birthday.split('/');
+                        $ctrl.corpRegisDate = dateSplit[0];
                         $ctrl.bday = dateSplit[0];
                         $ctrl.bmonth = dateSplit[1];
                         $ctrl.byear = dateSplit[2];
                     } else {
+                        $ctrl.corpRegisDate = '';
                         $ctrl.bday = '';
                         $ctrl.bmonth = '';
                         $ctrl.byear = '';
@@ -255,10 +264,30 @@ angular.module('storefront.account')
                 
             });
 
+        $ctrl.changeCustomerType = function () {
+            if ($ctrl.changeData.customerType == 'Corporation') {
+                $ctrl.changeData.lastName = ' '; // Platform not allow last name to be empty
+            } else {
+                $ctrl.changeData.lastName = ''; // Make it show the required warning message
+            }
+        }
+
         $ctrl.submit = function () {
 
+            // Merge birth day + month + year
             $ctrl.changeData.birthday = $ctrl.bday + '/' + $ctrl.bmonth + '/' + $ctrl.byear;
-            
+
+            // Set corporation name into first name
+            if ($ctrl.changeData.customerType == 'Corporation') {
+                $ctrl.changeData.firstName = $ctrl.changeData.corporationName;
+                $ctrl.changeData.lastName = ' '; // Platform not allow last name to be empty
+                $ctrl.changeData.fullName = $ctrl.changeData.firstName;
+                $ctrl.changeData.gender = '';
+                $ctrl.changeData.birthday = $ctrl.corpRegisDate + '/' + $ctrl.bmonth + '/' + $ctrl.byear;
+            } else {
+                $ctrl.changeData.fullName = $ctrl.changeData.firstName + ' ' + $ctrl.changeData.lastName;
+            }
+
             // no validation
             $ctrl.accountManager.updateProfile($ctrl.changeData);
         };
@@ -297,11 +326,10 @@ angular.module('storefront.account')
                 });
         };
 
-        $ctrl.isIdCardPhotoUploading = false;
+        $ctrl.isIdPhotoUploading = false;
         $ctrl.isBankbookPhotoUploading = false;
         var folderUrl = '/documents/';
         function initializeUploader() {
-            console.log('initialize');
             if (!$scope.uploader) {
                 // Create the uploader
                 var uploader = $scope.uploader = new FileUploader({
@@ -313,9 +341,9 @@ angular.module('storefront.account')
                 });
                 
                 uploader.onSuccessItem = function (fileItem, images) {
-                     if ($ctrl.isIdCardPhotoUploading) {
+                    if ($ctrl.isIdPhotoUploading) {
                         $ctrl.changeData.idCardPhoto = images[0].url;
-                        $ctrl.isIdCardPhotoUploading = false;
+                        $ctrl.isIdPhotoUploading = false;
                     }
 
                     if ($ctrl.isBankbookPhotoUploading) {

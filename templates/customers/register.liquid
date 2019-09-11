@@ -39,12 +39,23 @@
                 {% else %}
                     <input type="hidden" value="{{form.phone_number}}" name="customer[phone_number]">
                     <input type="hidden" value="{{form.email}}" name="customer[email]">
+                    <input type="hidden" value="{{form.customer_type}}" name="customer[customer_type]">
                     <label for="verification_code" class="hidden-label">{{ 'customer.verification.verification_code' | t }}</label>
                     <input type="text" value="{{form.verification_code}}" name="customer[verification_code]" id="verification_code" required placeholder="{{ 'customer.verification.verification_code' | t }}" {% if form.errors contains "verification_code" %} class="error" {% endif %} autocorrect="off" autocapitalize="characters" autofocus>
                 {% endif %}
 
                 <p>
                 {% if form.verification_code_sent == false %}
+                    <label for="customer_type" class="hidden-label">{{ 'customer.register.customer_type' | t }}</label>
+                    <select name="customer[customer_type]" id="customer_type" required="required" class="form-input" size="1">
+                        <option value="Individual">{{ 'customer.register.select_customer_type_individual' | t }}</option>
+                        <option value="Corporation">{{ 'customer.register.select_customer_type_corporation' | t }}</option>
+                        <option value="Foreign National">{{ 'customer.register.select_customer_type_foreign_national' | t }}</option>
+                    </select>
+                    <script>
+                        document.getElementById("customer_type").value='{{form.customer_type}}';
+                    </script>
+
                     <p>
                         {% if form.verification_type == 'Email' %}
                             <a href="{{ 'account/register/verify/phone' | absolute_url }}">{{ 'customer.register.signup_by_phone' | t }}</a> <br/>
@@ -66,6 +77,8 @@
                 </p>
 
             {% else %}
+                
+                <input type="hidden" value="{{form.customer_type}}" name="customer[customer_type]">
                 <input type="hidden" value="{{form.verification_succeeded}}" name="customer[verification_succeeded]" id="verification_succeeded">
                 {% if form.verification_type == 'Email' %}
                     <label for="email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
@@ -81,16 +94,23 @@
 
                 <label for="password" class="hidden-label">{{ 'customer.register.password' | t }}</label>
                 <input type="password" minlength="5" value="" name="customer[password]" id="create_password" required placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} class="error" {% endif %} autofocus>
-            
-                <label for="first_name" class="hidden-label">{{ 'customer.register.first_name' | t }}</label>
-                <input type="text" value="{{form.first_name}}" name="customer[first_name]" id="first_name" required placeholder="{{ 'customer.register.first_name' | t }}" {% if form.errors contains "first_name" %} class="error" {% endif %} autocapitalize="words">
+                
+                {% if form.customer_type == 'Corporation' %}
+                    <label for="first_name" class="hidden-label">{{ 'customer.register.corporation_name' | t }}</label>
+                    <input type="text" value="{{form.first_name}}" name="customer[first_name]" id="first_name" required placeholder="{{ 'customer.register.corporation_name' | t }}" {% if form.errors contains "first_name" %} class="error" {% endif %} autocapitalize="words">
+                    <input type="hidden" value="." name="customer[last_name]" id="last_name">
 
-                <label for="last_name" class="hidden-label">{{ 'customer.register.last_name' | t }}</label>
-                <input type="text" value="{{form.last_name}}" name="customer[last_name]" id="last_name" required placeholder="{{ 'customer.register.last_name' | t }}" {% if form.errors contains "last_name" %} class="error" {% endif %} autocapitalize="words">
+                {% else %}
+                    <label for="first_name" class="hidden-label">{{ 'customer.register.first_name' | t }}</label>
+                    <input type="text" value="{{form.first_name}}" name="customer[first_name]" id="first_name" required placeholder="{{ 'customer.register.first_name' | t }}" {% if form.errors contains "first_name" %} class="error" {% endif %} autocapitalize="words">
 
+                    <label for="last_name" class="hidden-label">{{ 'customer.register.last_name' | t }}</label>
+                    <input type="text" value="{{form.last_name}}" name="customer[last_name]" id="last_name" required placeholder="{{ 'customer.register.last_name' | t }}" {% if form.errors contains "last_name" %} class="error" {% endif %} autocapitalize="words">
+                {% endif %}
                 <p>
                     <input type="submit" value="{{ 'customer.register.submit' | t }}" class="btn" {% if form.verification_succeeded == false %} disabled {% endif %}>
                 </p>
+
             {% endif %}
 
             {{ 'common.or' | t }} <a href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>

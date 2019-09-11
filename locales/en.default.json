@@ -618,7 +618,14 @@
             "signup_by_phone": "Sign up with phone",
             "signup_by_email": "Sign up with email",
             "cancel": "Return to Store",
-            "registration_unsuccessful":  "Registration is unsuccessful"
+            "registration_unsuccessful": "Registration is unsuccessful",
+            "customer_type": "Customer type",
+            "select_customer_type_individual": "Individual",
+            "select_customer_type_corporation": "Corporation",
+            "select_customer_type_foreign_national": "Foreign national",
+            "corporation_name": "Corporation name"
+
+
         },
         "phone_number": {
             "manage": "Edit you phone number"
@@ -635,7 +642,7 @@
             "edit": "Edit",
             "delete": "Delete",
             "two_factor_auth": "Enable two factor authentication",
-            "id_card_number": "Identitiy Card Number",
+            "id_number": "Identitiy number",
             "birth_day_select_placeholder": "Select birth day",
             "birth_day": "Birth day",
             "birth_month": "month",
@@ -644,8 +651,13 @@
             "gender_select_placeholder": "Select gender",
             "phone_update_failed": "Update phone number failed! Please try again later.",
             "email_update_failed": "Update email address failed! Please try again later.",
-            "upload_id_card_photo": "Identity card photo",
-            "upload_bankbook_photo": "Bankbook photo"
+            "upload_id_photo": "Identity photo",
+            "upload_bankbook_photo": "Bankbook photo",
+            "customer_type": "Customer type",
+            "select_customer_type": "Select customer type",
+            "corporation_name": "Corporation name",
+            "corporation_registration_date": "Registration date",
+            "corporation_registration_date_select_placeholder": "Select registration date"
         },
         "change_password": {
             "title": "Change Password",

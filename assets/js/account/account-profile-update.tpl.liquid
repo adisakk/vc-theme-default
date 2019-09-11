@@ -82,37 +82,58 @@
     </form>
 
     <form ng-submit="$ctrl.submit()" name="detailForm">
-        
-        <vc-labeled-input value="$ctrl.changeData.firstName" name="first_name" placeholder="{{ 'customer.edit_profile.first_name' | t }}" form="detailForm" required="true" autofocus="true"></vc-labeled-input>
-        <vc-labeled-input value="$ctrl.changeData.lastName" name="last_name" placeholder="{{ 'customer.edit_profile.last_name' | t }}" form="detailForm"></vc-labeled-input>
-        
+
         <div class="col">
-            <div class="form-group form-select" ng-class="{'keyuped': $ctrl.changeData.gender.length, 'error': (detailForm.gender.$dirty || detailForm.$submitted) && detailForm.gender.$error.required }">
-                <label for="gender" class="form-label">{{ 'customer.edit_profile.gender' | t }}</label>
-                <select ng-model="$ctrl.changeData.gender" ng-options="g for g in $ctrl.genders" name="gender" required="required" class="form-input" size="1">
-                    <option value="">{{ 'customer.edit_profile.gender_select_placeholder' | t }}</option>
+            <div class="form-group form-select" ng-class="{'keyuped': $ctrl.changeData.customerType.length, 'error': (detailForm.customerType.$dirty || detailForm.$submitted) && detailForm.customerType.$error.required }">
+                <label for="customerType" class="form-label">{{ 'customer.edit_profile.customer_type' | t }}</label>
+                <select ng-model="$ctrl.changeData.customerType" ng-options="c for c in $ctrl.customerTypes" name="customerType" ng-change="$ctrl.changeCustomerType()" ng-required="true" class="form-input" size="1">
+                    <option value="">{{ 'customer.edit_profile.select_customer_type' | t }}</option>
                 </select>
-                <span class="form-error" ng-if="(detailForm.gender.$dirty || detailForm.$submitted) && detailForm.gender.$error.required" ng-bind="detailForm.gender.requiredError || '{{ 'common.required' | t }}'"></span>
+                <span class="form-error" ng-if="(detailForm.customerType.$dirty || detailForm.$submitted) && detailForm.customerType.$error.required" ng-bind="detailForm.customerType.requiredError || '{{ 'common.required' | t }}'"></span>
             </div>
          </div>
 
-        <vc-labeled-input value="$ctrl.changeData.idCardNumber" name="idCardNumber" placeholder="{{ 'customer.edit_profile.id_card_number' | t }}" form="detailForm" required="true"></vc-labeled-input>
+        <vc-labeled-input ng-if="$ctrl.changeData.customerType=='Corporation'" value="$ctrl.changeData.corporationName" name="corporation_name" placeholder="{{ 'customer.edit_profile.corporation_name' | t }}" form="detailForm" required="true" autofocus="true"></vc-labeled-input>
+        <vc-labeled-input ng-if="$ctrl.changeData.customerType=='Individual' || $ctrl.changeData.customerType=='Foreign National'" value="$ctrl.changeData.firstName" name="first_name" placeholder="{{ 'customer.edit_profile.first_name' | t }}" form="detailForm" required="true" autofocus="true"></vc-labeled-input>
+        <vc-labeled-input ng-if="$ctrl.changeData.customerType=='Individual' || $ctrl.changeData.customerType=='Foreign National'" value="$ctrl.changeData.lastName" name="last_name" placeholder="{{ 'customer.edit_profile.last_name' | t }}" form="detailForm" required="true"></vc-labeled-input>
+        
+        <div class="col" ng-if="$ctrl.changeData.customerType=='Individual' || $ctrl.changeData.customerType=='Foreign National'" >
+            <div class="form-group form-select" ng-class="{'keyuped': $ctrl.changeData.gender.length, 'error': (detailForm.gender.$dirty || detailForm.$submitted) && detailForm.gender.$error.required}" >
+                <label for="gender" class="form-label">{{ 'customer.edit_profile.gender' | t }}</label>
+                <select ng-model="$ctrl.changeData.gender" ng-options="g for g in $ctrl.genders" name="gender" ng-required="true" class="form-input" size="1">
+                    <option value="">{{ 'customer.edit_profile.gender_select_placeholder' | t }}</option>
+                </select>
+                 <span class="form-error" ng-if="(detailForm.gender.$dirty || detailForm.$submitted) && detailForm.gender.$error.required" ng-bind="detailForm.gender.requiredError || '{{ 'common.required' | t }}'"></span>
+            </div>
+         </div>
+
+        <vc-labeled-input value="$ctrl.changeData.idNumber" name="idNumber" placeholder="{{ 'customer.edit_profile.id_number' | t }}" form="detailForm" required="yes"></vc-labeled-input>
         
         <div class="cols">
-            <div class="col col-33">
-                <div class="form-group form-select" ng-class="{'keyuped': $ctrl.bday.length, 'error': (detailForm.bday.$dirty || detailForm.$submitted) && detailForm.bday.$error.required }">
+            <div class="col col-33" ng-if="$ctrl.changeData.customerType=='Corporation'">
+                <div class="form-group form-select" ng-class="{'keyuped': $ctrl.corpRegisDate.length, 'error': (detailForm.corpRegisDate.$dirty || detailForm.$submitted) && detailForm.corpRegisDate.$error.required}">
+                    <label for="corpRegisDate" class="form-label">{{ 'customer.edit_profile.corporation_registration_date' | t }}</label>
+                    <select ng-model="$ctrl.corpRegisDate" ng-options="d for d in $ctrl.days" name="corpRegisDate" ng-required="true" class="form-input" size="1">
+                        <option value="">{{ 'customer.edit_profile.corporation_registration_date_select_placeholder' | t }}</option>
+                    </select>
+                    <span class="form-error" ng-if="(detailForm.corpRegisDate.$dirty || detailForm.$submitted) && detailForm.corpRegisDate.$error.required" ng-bind="detailForm.corpRegisDate.requiredError || '{{ 'common.required' | t }}'"></span>
+                 </div>
+            </div>
+
+            <div class="col col-33" ng-if="$ctrl.changeData.customerType=='Individual' || $ctrl.changeData.customerType=='Foreign National'">
+                <div class="form-group form-select" ng-class="{'keyuped': $ctrl.bday.length, 'error': (detailForm.bday.$dirty || detailForm.$submitted) && detailForm.bday.$error.required}">
                     <label for="bday" class="form-label">{{ 'customer.edit_profile.birth_day' | t }}</label>
-                    <select ng-model="$ctrl.bday" ng-options="d for d in $ctrl.days" name="bday" required="required" class="form-input" size="1">
+                    <select ng-model="$ctrl.bday" ng-options="d for d in $ctrl.days" name="bday" ng-required="true" class="form-input" size="1">
                         <option value="">{{ 'customer.edit_profile.birth_day_select_placeholder' | t }}</option>
                     </select>
                     <span class="form-error" ng-if="(detailForm.bday.$dirty || detailForm.$submitted) && detailForm.bday.$error.required" ng-bind="detailForm.bday.requiredError || '{{ 'common.required' | t }}'"></span>
-                </div>
+                 </div>
             </div>
             
             <div class="col col-33">
-                <div class="form-group form-select" ng-class="{'keyuped': $ctrl.bmonth.length, 'error': (detailForm.bmonth.$dirty || detailForm.$submitted) && detailForm.bmonth.$error.required }">
+                <div class="form-group form-select" ng-class="{'keyuped': $ctrl.bmonth.length, 'error': (detailForm.bmonth.$dirty || detailForm.$submitted) && detailForm.bmonth.$error.required}">
                     <label for="bmonth" class="form-label">{{ 'customer.edit_profile.birth_month' | t }}</label>
-                    <select ng-model="$ctrl.bmonth" ng-options="m for m in $ctrl.months" name="bmonth" required="required" class="form-input" size="1">
+                    <select ng-model="$ctrl.bmonth" ng-options="m for m in $ctrl.months" name="bmonth" ng-required="true" class="form-input" size="1">
                         <option value="">{{ 'customer.edit_profile.birth_month' | t }}</option>
                     </select>
                     <span class="form-error" ng-if="(detailForm.bmonth.$dirty || detailForm.$submitted) && detailForm.bmonth.$error.required" ng-bind="detailForm.bmonth.requiredError || '{{ 'common.required' | t }}'"></span>
@@ -120,30 +141,29 @@
             </div>
             
             <div class="col col-33">
-                <div class="form-group form-select" ng-class="{'keyuped': !$ctrl.byear == '', 'error': (detailForm.byear.$dirty || detailForm.$submitted) && detailForm.byear.$error.required}">
+                <div class="form-group form-select" ng-class="{'keyuped': $ctrl.byear.length, 'error': (detailForm.byear.$dirty || detailForm.$submitted) && detailForm.byear.$error.required}">
                     <label for="byear" class="form-label">{{ 'customer.edit_profile.birth_year' | t }}</label>
-                    <select ng-model="$ctrl.byear" ng-options="y for y in $ctrl.years" name="byear" id="byear" required="required" class="form-input" size="1">
+                    <select ng-model="$ctrl.byear" ng-options="y for y in $ctrl.years" name="byear" id="byear" ng-required="true" class="form-input" size="1">
                         <option value="">{{ 'customer.edit_profile.birth_year' | t }}</option>
                     </select>
                     <span class="form-error" ng-if="(detailForm.byear.$dirty || detailForm.$submitted) && detailForm.byear.$error.required" ng-bind="detailForm.byear.requiredError || '{{ 'common.required' | t }}'"></span>
                 </div>
-                <p class="form-error" ng-if="$ctrl.detailForm.$submitted && $ctrl.byear.$error.required" ng-bind="'Please select ' + $ctrl.byear"></p>
             </div>
         </div>
 
         <div class="cols">
             <div class="col col-50" align="center">
                 <div class="form-input">
-                    <p>{{ 'customer.edit_profile.upload_id_card_photo' | t }}</p>
-                    <div class="image-preview-small" ng-class="{'image-preview-no-image': !$ctrl.changeData.idCardPhoto}" style="cursor:pointer">
-                        <img ng-if="$ctrl.changeData.idCardPhoto" ng-src="$ctrl.changeData.idCardPhoto" ng-click="openUrl($ctrl.changeData.idCardPhoto)" />
-                        <i ng-if="!$ctrl.changeData.idCardPhoto" class="gallery-ico fa fa-image"></i>
+                    <p>{{ 'customer.edit_profile.upload_id_photo' | t }}</p>
+                    <div class="image-preview-small" ng-class="{'image-preview-no-image': !$ctrl.changeData.idPhoto}" style="cursor:pointer">
+                        <img ng-if="$ctrl.changeData.idPhoto" ng-src="$ctrl.changeData.idPhoto" ng-click="openUrl($ctrl.changeData.idPhoto)" />
+                        <i ng-if="!$ctrl.changeData.idPhoto" class="gallery-ico fa fa-image"></i>
                     </div>
-                    <label ng-if="!$ctrl.changeData.idCardPhoto" style="cursor:pointer" ng-click="$ctrl.isIdCardPhotoUploading=true">
-                        <input style="display: none;" name="idCardUploader" type="file" multiple-attr="false" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1" accept="image/*">
+                    <label ng-if="!$ctrl.changeData.idPhoto" style="cursor:pointer" ng-click="$ctrl.isIdPhotoUploading=true">
+                        <input style="display: none;" name="idUploader" type="file" multiple-attr="false" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1" accept="image/*">
                         Upload
                     </label>
-                    <a ng-if="$ctrl.changeData.idCardPhoto" href ng-click="$ctrl.changeData.idCardPhoto=null">Delete</a>
+                    <a ng-if="$ctrl.changeData.idPhoto" href ng-click="$ctrl.changeData.idPhoto=null">Delete</a>
                 </div>
             </div>
             
