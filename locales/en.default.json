@@ -656,8 +656,7 @@
             "customer_type": "Customer type",
             "select_customer_type": "Select customer type",
             "corporation_name": "Corporation name",
-            "corporation_registration_date": "Registration date",
-            "corporation_registration_date_select_placeholder": "Select registration date"
+            "corporation_registration_date": "Registration date"
         },
         "change_password": {
             "title": "Change Password",
