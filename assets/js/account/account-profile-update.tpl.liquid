@@ -156,7 +156,7 @@
                 <div class="form-input">
                     <p>{{ 'customer.edit_profile.upload_id_photo' | t }}</p>
                     <div class="image-preview-small" ng-class="{'image-preview-no-image': !$ctrl.changeData.idPhoto}" onclick="document.getElementById('idUploader').click()" style="cursor:pointer">
-                        <img ng-if="$ctrl.changeData.idPhoto" ng-src="$ctrl.changeData.idPhoto" ng-click="openUrl($ctrl.changeData.idPhoto)" />
+                        <img ng-if="$ctrl.changeData.idPhoto" ng-src="{% raw %}{{$ctrl.changeData.idPhoto}}{% endraw %}" ng-click="openUrl($ctrl.changeData.idPhoto)" />
                         <i ng-if="!$ctrl.changeData.idPhoto" class="gallery-ico fa fa-image"></i>
                     </div>
                     <label ng-if="!$ctrl.changeData.idPhoto" style="cursor:pointer" ng-click="$ctrl.isIdPhotoUploading=true">
