@@ -6,7 +6,7 @@
     <div class="form-box" ng-repeat="paymentMethod in $ctrl.availPaymentMethods | orderBy: 'priority'">
         <div class="box-row">
             <label class="radio-box">
-                <input ng-model="$ctrl.paymentMethod" ng-value="paymentMethod" ng-change="$ctrl.selectMethod(paymentMethod)" ng-required="true" type="radio" class="radio"/>
+                <input ng-model="$ctrl.paymentMethod" ng-value="paymentMethod" ng-change="$ctrl.selectMethod(paymentMethod)" ng-disabled="paymentMethod.name == 'Pay by GF points' && !$ctrl.isAllowToPayByPoints" ng-required="true" type="radio" class="radio"/>
                 <div class="switch"></div>
                 <div ng-bind="paymentMethod.name" class="name"></div>
                 <div ng-if="paymentMethod.total.amount > 0" class="cost">
@@ -23,6 +23,11 @@
                     {% endif %}
                 </div>
             </label>
+            <div class="form-box">
+                <div class="box-row">
+                    <span class="h5 alert alert-warning" ng-if="paymentMethod.name == 'Pay by GF points' && !$ctrl.isAllowToPayByPoints">&nbsp;&nbsp;Your personal/corporate identity and bankbook verification are both required to &nbsp;&nbsp;enable this payment method!</span>
+                <div>
+            </div>
         </div>
         <div class="box-row" ng-if="paymentMethod === $ctrl.paymentMethod && $ctrl.paymentMethod.paymentMethodType === 'Standard'">
             <vc-credit-card card="$ctrl.paymentMethod.card" validation-container="$ctrl.validationContainer"></vc-credit-card>

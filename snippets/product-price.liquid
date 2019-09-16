@@ -31,6 +31,15 @@
         {% include 'price-sale' %}
     </span>
     {% endif %}
+
+    <span id="productSharingPoint" class="h3 medium--left">
+        {% for property in product.properties %}
+            {% if property.name == 'Sharing Point' and property.value > 0 %}
+                <small> {{ property.display_name }} {{ property.value }}</small>
+            {% endif %}
+        {% endfor %}
+    </span>
+
     {% if settings.product_reviews_enable %}
             <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
     {% endif %}

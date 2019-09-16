@@ -89,6 +89,13 @@
                     <span id="productPrice" class="h1">
                         <small ng-bind="selectedVariation.price.actualPriceWithTax.formattedAmount"></small>
                     </span>
+                    <span id="productSharingPoint" class="h2">
+                        {% for property in product.properties %}
+                            {% if property.name == 'Sharing Point' and property.value > 0 %}
+                                <small> {{ property.display_name }} {{ property.value }}</small>
+                            {% endif %}
+                        {% endfor %}
+                    </span>
                     <span>{{ 'products.product.vat' | t }}</span>
                     {% else %}
                     <span ng-if="selectedVariation.price.discountAmount.amount > 0" class="old">
@@ -98,6 +105,13 @@
                     </span>
                     <span id="productPrice" class="h1">
                         <small ng-bind="selectedVariation.price.actualPrice.formattedAmount"></small>
+                    </span>
+                    <span id="productSharingPoint" class="h3">
+                        {% for property in product.properties %}
+                            {% if property.name == 'Sharing Point' and property.value > 0 %}
+                                <small> {{ property.display_name }} {{ property.value }}</small>
+                            {% endif %}
+                        {% endfor %}
                     </span>
                     {% endif %}
                 </li>
@@ -135,7 +149,7 @@
                 <label for="quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
                 <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
                 {% endif %}
-                <button type="button" name="add" id="addToCart" class="btn btn-clearfix AddShopCart" ng-disabled="!selectedVariation.id || !selectedVariation.isAvailable" ng-click="addProductToCart(selectedVariation, 1)" interactor-arg="{{ product.id }}">
+                <button type="button" name="add" id="addToCart" class="btn btn-clearfix AddShopCart" ng-show="customer.isRegisteredUser" ng-disabled="!selectedVariation.id || !selectedVariation.isAvailable" ng-click="addProductToCart(selectedVariation, 1)" interactor-arg="{{ product.id }}">
                     <span class="icon icon-cart"></span>
                     <span id="addToCartText">{{ 'products.product.add_to_cart' | t }}</span>
                 </button>

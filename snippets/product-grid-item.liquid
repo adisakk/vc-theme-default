@@ -40,7 +40,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="product-item--other" style="margin-bottom: 10px;">
+        <div class="product-item--other" style="margin-bottom: 10px;" ng-show="customer.isRegisteredUser">
             {% if product.available %}
             <button class="btn btn-secondary AddShopCart" title="{{ 'products.general.add_to_cart' | t }}" ng-click="addProductToCartById('{{ product.id }}', 1, $event)" ng-controller="productController" interactor-arg="{{ product.id }}">
                 <span class="icon icon-cart"></span>

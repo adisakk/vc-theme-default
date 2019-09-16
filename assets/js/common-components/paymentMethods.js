@@ -11,7 +11,7 @@ storefrontApp.component('vcPaymentMethods', {
         paymentMethod: '=',
         validationContainer: '='
     },
-    controller: ['$scope', function ($scope) {
+    controller: ['$scope', 'storefrontApp.mainContext', function ($scope, mainContext) {
         var ctrl = this;
 
         this.$onInit = function () {
@@ -28,6 +28,23 @@ storefrontApp.component('vcPaymentMethods', {
                 ctrl.validationContainer.addComponent(this);
             if (ctrl.checkoutStep)
                 ctrl.checkoutStep.addComponent(this);
+
+            var customer = mainContext.customer;
+            var idApproved = customer.contact.dynamicProperties.find(function (element) {
+                return element.name == 'Id_Approve';
+            });
+            var bookApproved = customer.contact.dynamicProperties.find(function (element) {
+                return element.name == 'Bankbook_Approve';
+            });
+
+            var isIdApproved = idApproved != undefined && idApproved.values[0] != undefined ? idApproved.values[0].value : false;
+            var isBookApproved = bookApproved != undefined && bookApproved.values[0] != undefined ? bookApproved.values[0].value : false;
+
+            if (isIdApproved == 'true' && isBookApproved == 'true') {
+                ctrl.isAllowToPayByPoints = true;
+            } else {
+                ctrl.isAllowToPayByPoints = false;
+            }
         };
 
         this.$onDestroy = function () {
