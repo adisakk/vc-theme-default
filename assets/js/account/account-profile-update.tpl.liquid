@@ -114,7 +114,7 @@
                 <div class="form-group form-select" ng-class="{'keyuped': $ctrl.corpRegisDate.length, 'error': (detailForm.corpRegisDate.$dirty || detailForm.$submitted) && detailForm.corpRegisDate.$error.required}">
                     <label for="corpRegisDate" class="form-label">{{ 'customer.edit_profile.corporation_registration_date' | t }}</label>
                     <select ng-model="$ctrl.corpRegisDate" ng-options="d for d in $ctrl.days" name="corpRegisDate" ng-required="true" class="form-input" size="1">
-                        <option value="">{{ 'customer.edit_profile.corporation_registration_date_select_placeholder' | t }}</option>
+                        <option value="">{{ 'customer.edit_profile.corporation_registration_date' | t }}</option>
                     </select>
                     <span class="form-error" ng-if="(detailForm.corpRegisDate.$dirty || detailForm.$submitted) && detailForm.corpRegisDate.$error.required" ng-bind="detailForm.corpRegisDate.requiredError || '{{ 'common.required' | t }}'"></span>
                  </div>
@@ -155,12 +155,12 @@
             <div class="col col-50" align="center">
                 <div class="form-input">
                     <p>{{ 'customer.edit_profile.upload_id_photo' | t }}</p>
-                    <div class="image-preview-small" ng-class="{'image-preview-no-image': !$ctrl.changeData.idPhoto}" style="cursor:pointer">
+                    <div class="image-preview-small" ng-class="{'image-preview-no-image': !$ctrl.changeData.idPhoto}" onclick="document.getElementById('idUploader').click()" style="cursor:pointer">
                         <img ng-if="$ctrl.changeData.idPhoto" ng-src="$ctrl.changeData.idPhoto" ng-click="openUrl($ctrl.changeData.idPhoto)" />
                         <i ng-if="!$ctrl.changeData.idPhoto" class="gallery-ico fa fa-image"></i>
                     </div>
                     <label ng-if="!$ctrl.changeData.idPhoto" style="cursor:pointer" ng-click="$ctrl.isIdPhotoUploading=true">
-                        <input style="display: none;" name="idUploader" type="file" multiple-attr="false" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1" accept="image/*">
+                        <input style="display: none;" name="idUploader" id="idUploader" type="file" multiple-attr="false" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1" accept="image/*" #idUpload>
                         Upload
                     </label>
                     <a ng-if="$ctrl.changeData.idPhoto" href ng-click="$ctrl.changeData.idPhoto=null">Delete</a>
@@ -170,7 +170,7 @@
             <div class="col col-50" align="center">
                 <div class="form-input">
                     <p>{{ 'customer.edit_profile.upload_bankbook_photo' | t }}</p>
-                    <div class="image-preview-small" ng-class="{'image-preview-no-image': !$ctrl.changeData.bankbookPhoto}" style="cursor:pointer" align="center">
+                    <div class="image-preview-small" ng-class="{'image-preview-no-image': !$ctrl.changeData.bankbookPhoto}" onclick="document.getElementById('bankbookUploader').click()" style="cursor:pointer" align="center">
                         <img ng-if="$ctrl.changeData.bankbookPhoto" ng-src="{% raw %}{{$ctrl.changeData.bankbookPhoto}}{% endraw %}" ng-click="openUrl($ctrl.changeData.bankbookPhoto)" />
                         <i ng-if="!$ctrl.changeData.bankbookPhoto" class="gallery-ico fa fa-image"></i>
                     </div>

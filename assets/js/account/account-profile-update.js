@@ -342,7 +342,7 @@ angular.module('storefront.account')
                 
                 uploader.onSuccessItem = function (fileItem, images) {
                     if ($ctrl.isIdPhotoUploading) {
-                        $ctrl.changeData.idCardPhoto = images[0].url;
+                        $ctrl.changeData.idPhoto = images[0].url;
                         $ctrl.isIdPhotoUploading = false;
                     }
 
